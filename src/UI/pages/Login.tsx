@@ -2,25 +2,35 @@ import { useState } from "react";
 import { useAuthStore } from "../stores/authStore";
 import { InputContainer, LoginContainer, LoginForm } from "./Login.styles";
 import { Button, Input, Text } from "@isabelajs/design-system";
+import { useForm, Controller } from "react-hook-form";
+
+type loginForm = {
+  email: string;
+  password: string;
+};
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
   const login = useAuthStore((state) => state.login);
+  const [error, setError] = useState("");
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    mode: "onChange",
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
 
+  const onSubmit = async (data: loginForm) => {
+    console.log(data);
     try {
-      await login(email, password);
-      console.log("email", email);
-      console.log("password", password);
-    } catch (err) {
-      console.error("Login failed:", err);
-      setError("Invalid credentials");
+      await login(data.email, data.password);
+    } catch (error: any) {
+      setError(error.message);
     }
   };
 
@@ -39,7 +49,7 @@ function Login() {
           text="Iniciar sesión"
           type="h1"
         />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <InputContainer>
             <Text
               color="primary"
@@ -47,11 +57,25 @@ function Login() {
               text="Correo electrónico"
               type="body1"
             />
-            <Input
-              type="email"
-              placeholder="Correo electrónico"
-              value={email}
-              onChange={(e: any) => setEmail(e.target.value)}
+            <Controller
+              control={control}
+              name="email"
+              rules={{
+                required: "Correo electrónico es requerido",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Correo electrónico inválido",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="email"
+                  placeholder="Correo electrónico"
+                  isValid={!errors.email && field.value !== ""}
+                  error={errors.email?.message || ""}
+                />
+              )}
             />
           </InputContainer>
           <InputContainer>
@@ -61,18 +85,31 @@ function Login() {
               text="Contraseña"
               type="body1"
             />
-            <Input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e: any) => setPassword(e.target.value)}
+            <Controller
+              control={control}
+              name="password"
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="password"
+                  error={
+                    errors.password?.type === "required"
+                      ? "Contraseña es requerida"
+                      : ""
+                  }
+                  placeholder="Contraseña"
+                />
+              )}
             />
           </InputContainer>
+          {error && <Text color="error" text={error} type="body1" />}
           <Button
             text="Continuar"
             type="submit"
             variant="primary"
             size="large"
+            disabled={!isValid}
           />
         </form>
       </LoginForm>
