@@ -1,8 +1,9 @@
+import { EnumCacheData } from "../enums/cache-data.enum"
 import { IDynamicObject } from "../interfaces/object.interface"
 
 
 export interface ICacheRepository {
-  get(key: string): Promise<IDynamicObject | null>
-  set<T>(key: string, value: T): Promise<void>
-  remove(key: string): Promise<void>
+  get(key: EnumCacheData): Promise<IDynamicObject | null>
+  set<T>(key: EnumCacheData, value: T): Promise<void>
+  remove(key: EnumCacheData): Promise<void>
 }
