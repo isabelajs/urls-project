@@ -1,6 +1,5 @@
 export class User {
     private encryptedPassword!: string;
-    private password!: string;
 
     constructor(
       public readonly name: string,
