@@ -1,4 +1,6 @@
 export enum EnumCacheData {
-  USER = 'users',
-  URLS = 'urls',
+  SESSION = 'session',
+
+  USERS = 'users', //BACKEND
+  URLS = 'urls', //BACKEND
 }
