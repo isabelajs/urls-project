@@ -16,7 +16,7 @@ interface AuthState {
 }
 const cacheRepository = new LocalStorageAdapter()
 const userRepository = new UserAdapter(cacheRepository)
-const authService = new AuthUseCase(userRepository)
+const authService = new AuthUseCase(userRepository, cacheRepository)
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
@@ -31,6 +31,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   logout: async () => {
+    await authService.logout()
     set({ isAuthenticated: false, user: null })
   },
   register: async (name: string, email: string, password: string) => {
@@ -44,6 +45,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   init: async () => {
-    console.log('init')
+    const user = await authService.getSession()
+    if(user) {
+      set({ isAuthenticated: true, user })
+    }
   }
 }))
