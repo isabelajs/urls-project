@@ -1,8 +1,8 @@
 import { create } from 'zustand'
-import { AuthService } from '../../User/application/AuthService'
 import { User } from '../../User/domain/User'
-import { LocalStorageUserRepository } from '../../User/infrastructure/LocalStorageUserRepository'
-import { LocalStorageCacheRepository } from '../../User/infrastructure/LocalStorageCacheRepository'
+import { AuthUseCase } from '../../User/application/use-cases/auth.usecase'
+import { LocalStorageAdapter } from '../../Shared/infraestructure/local-storage.adapter'
+import { UserAdapter } from '../../User/infrastructure/User.Adapter'
 
 
 // Define the store state type
@@ -14,10 +14,9 @@ interface AuthState {
   register: (name: string, email: string, password: string) => Promise<void>
   init: () => Promise<void>
 }
-
-const userRepository = new LocalStorageUserRepository()
-const cacheRepository = new LocalStorageCacheRepository()
-const authService = new AuthService(userRepository, cacheRepository)
+const cacheRepository = new LocalStorageAdapter()
+const userRepository = new UserAdapter(cacheRepository)
+const authService = new AuthUseCase(userRepository)
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
