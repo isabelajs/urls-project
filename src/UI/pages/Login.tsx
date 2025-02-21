@@ -103,7 +103,7 @@ function Login() {
               )}
             />
           </InputContainer>
-          {error && <Text color="error" text={error} type="body1" />}
+          {error && isValid && <Text color="error" text={error} type="body1" />}
           <Button
             text="Continuar"
             type="submit"
