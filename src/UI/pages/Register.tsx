@@ -1,28 +1,35 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import { useForm, Controller } from "react-hook-form";
 import { useAuthStore } from "../stores/authStore";
-import { Button, Input } from "@isabelajs/design-system";
+import { Button, Input, Text } from "@isabelajs/design-system";
 import { RegisterContainer } from "./Register.styles";
-import { Text } from "@isabelajs/design-system";
+import { TypeRegisterForm } from "../interfaces/register.type";
 
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const register = useAuthStore((state) => state.register);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    mode: "onChange",
+  });
+
+  const onSubmit = async (data: TypeRegisterForm) => {
+    console.log(data);
     try {
-      await register(name, email, password);
-      console.log("name", name);
-      console.log("email", email);
-      console.log("password", password);
-    } catch (err) {
-      console.error("Registration failed:", err);
-      setError("Registration failed");
+      await register(data.name, data.email, data.password);
+    } catch (error: any) {
+      setError(error.message);
     }
   };
 
@@ -36,7 +43,7 @@ function Register() {
       />
       <div className="register-container">
         <Text color="primary" fontWeight="bold" text="Registrarse" type="h1" />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="input-container">
             <Text
               color="primary"
@@ -44,11 +51,25 @@ function Register() {
               text="Nombre"
               type="body1"
             />
-            <Input
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e: any) => setName(e.target.value)}
+            <Controller
+              control={control}
+              name="name"
+              rules={{
+                required: "Nombre es requerido",
+                minLength: {
+                  value: 2,
+                  message: "Nombre debe tener al menos 2 caracteres",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="Name"
+                  isValid={!errors.name && field.value !== ""}
+                  error={errors.name?.message || ""}
+                />
+              )}
             />
           </div>
           <div className="input-container">
@@ -58,11 +79,19 @@ function Register() {
               text="Correo electrónico"
               type="body1"
             />
-            <Input
-              type="email"
-              placeholder="Correo electrónico"
-              value={email}
-              onChange={(e: any) => setEmail(e.target.value)}
+            <Controller
+              control={control}
+              name="email"
+              rules={{ required: "Correo electrónico es requerido", pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: "Correo electrónico inválido" } }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="email"
+                  placeholder="Correo electrónico"
+                  isValid={!errors.email && field.value !== ""}
+                  error={errors.email?.message || ""}
+                />
+              )}
             />
           </div>
           <div className="input-container">
@@ -72,11 +101,19 @@ function Register() {
               text="Contraseña"
               type="body1"
             />
-            <Input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e: any) => setPassword(e.target.value)}
+            <Controller
+              control={control}
+              name="password"
+              rules={{ required: "Contraseña es requerida" }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="Contraseña"
+                  isValid={!errors.password && field.value !== ""}
+                  error={errors.password?.message || ""}
+                />
+              )}
             />
           </div>
           <div className="info">
@@ -85,7 +122,11 @@ function Register() {
               fontWeight="regular"
               text="Al hacer clic en 'Continuar' doy mi consentimiento para recopilar, procesar y almacenar mi información de acuerdo a la "
               type="body2"
-              customStyles={{ fontSize: "12px", lineHeight: "1.2", display: "inline" }}
+              customStyles={{
+                fontSize: "12px",
+                lineHeight: "1.2",
+                display: "inline",
+              }}
             />
             <Link to="/privacy-policy">
               <Text
@@ -93,7 +134,11 @@ function Register() {
                 fontWeight="regular"
                 text="Política de privacidad"
                 type="body2"
-                customStyles={{ fontSize: "12px", lineHeight: "1.2", display: "inline" }}
+                customStyles={{
+                  fontSize: "12px",
+                  lineHeight: "1.2",
+                  display: "inline",
+                }}
               />
             </Link>
             <Text
@@ -101,7 +146,11 @@ function Register() {
               fontWeight="regular"
               text=", y las "
               type="body2"
-              customStyles={{ fontSize: "12px", lineHeight: "1.2", display: "inline" }}
+              customStyles={{
+                fontSize: "12px",
+                lineHeight: "1.2",
+                display: "inline",
+              }}
             />
             <Link to="/terms-and-conditions">
               <Text
@@ -109,7 +158,11 @@ function Register() {
                 fontWeight="regular"
                 text="Condiciones legales"
                 type="body2"
-                customStyles={{ fontSize: "12px", lineHeight: "1.2", display: "inline" }}
+                customStyles={{
+                  fontSize: "12px",
+                  lineHeight: "1.2",
+                  display: "inline",
+                }}
               />
             </Link>
             <Text
@@ -117,14 +170,20 @@ function Register() {
               fontWeight="regular"
               text="."
               type="body2"
-              customStyles={{ fontSize: "12px", lineHeight: "1.2", display: "inline" }}
+              customStyles={{
+                fontSize: "12px",
+                lineHeight: "1.2",
+                display: "inline",
+              }}
             />
           </div>
+          {error && isValid && <Text color="error" text={error} type="body1" />}
           <Button
             text="Continuar"
             type="submit"
             variant="primary"
             size="large"
+            disabled={!isValid}
           />
         </form>
       </div>
