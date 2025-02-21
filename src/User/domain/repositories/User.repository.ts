@@ -1,7 +1,7 @@
 import { User } from '../User';
 
 export abstract class UserRepository {
-  abstract checkUserbyEmail(email: string): Promise<User | null>;
-  abstract save(user: User): Promise<void>;
-  abstract logout(): Promise<void>;
+  abstract login(email: string, password: string): Promise<User | null>;
+  abstract register(user: User): Promise<void>;
+  abstract getUserByEmail(email: string): Promise<User | null>;
 }
