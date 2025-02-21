@@ -12,26 +12,33 @@ interface StoredUser {
 export class UserAdapter implements UserRepository {
   constructor(private readonly cacheRepository: ICacheRepository) {}
 
-  async checkUserbyEmail(email: string): Promise<User | null> {
-    const users = await this.cacheRepository.get(EnumCacheData.USER);
+  async login(email: string, password: string): Promise<User | null> {
+    const user = await this.getUserByEmail(email);
+    if(!user) throw new Error('User not found');
+    if(user.password !== password) throw new Error('Invalid credentials');
+    return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | null> {
+    const users = await this.cacheRepository.get(EnumCacheData.USERS);
     if (!users) return null;
     const usersArray = Array.isArray(users) ? users : [users];
     const user = usersArray.find((user: StoredUser) => user.email === email);
     if (!user) return null;
-    console.log('user', user);
     return new User(user.name, user.email, user.password);
   }
 
-  async save(user: User): Promise<void> {
-    const isUserExists = await this.checkUserbyEmail(user.email);
+  async register(user: User): Promise<void> {
+    const isUserExists = await this.getUserByEmail(user.email);
+
     if(isUserExists) {
       throw new Error('User already exists');
     }
-  
-    await this.cacheRepository.set<User>(EnumCacheData.USER, user);
-  }
 
-  async logout(): Promise<void> {
-    await this.cacheRepository.remove(EnumCacheData.USER);
+    const users = await this.cacheRepository.get<StoredUser[]>(EnumCacheData.USERS) || [];
+    users.push(user);
+
+    await this.cacheRepository.set<StoredUser[]>(EnumCacheData.USERS, users);
+
   }
 }
