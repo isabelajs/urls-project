@@ -5,7 +5,7 @@ import PrivateRoute from './UI/components/PrivateRoute'
 
 //pages
 import Login from './UI/pages/Login'
-import Dashboard from './UI/pages/Dashboard'
+import Home from './UI/pages/Home'
 import Register from './UI/pages/Register'
 
 //stores
@@ -15,14 +15,13 @@ import { useEffect } from 'react'
 function App() {
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  const logout = useAuthStore((state) => state.logout)
   const init = useAuthStore((state) => state.init)
 
   useEffect(() => {
     init()
   }, [])
 
-  const mainRoute = isAuthenticated ? '/dashboard' : '/login'
+  const mainRoute = isAuthenticated ? '/home' : '/login'
 
   return (
     <Router>
@@ -30,16 +29,16 @@ function App() {
         <Route path="/login" element={
           !isAuthenticated ?
           <Login /> :
-          <Navigate to="/dashboard" />
+          <Navigate to="/home" />
         } />
         <Route path="/register" element={
           !isAuthenticated ?
           <Register /> :
-          <Navigate to="/dashboard" />
+          <Navigate to="/home" />
         } />
-        <Route path="/dashboard" element={
+        <Route path="/home" element={
           <PrivateRoute isAuthenticated={isAuthenticated}>
-            <Dashboard onLogout={logout} />
+            <Home />
           </PrivateRoute>
         } />
         <Route path="/" element={<Navigate to={mainRoute} />} />
