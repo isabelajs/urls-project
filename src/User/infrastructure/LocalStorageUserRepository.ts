@@ -1,4 +1,4 @@
-import { IUserRepository } from '../domain/UserRepository';
+import { IUserRepository } from '../domain/repositories/UserRepository';
 import { User } from '../domain/User';
 
 interface StoredUser {
