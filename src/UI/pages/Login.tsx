@@ -3,11 +3,8 @@ import { useAuthStore } from "../stores/authStore";
 import { InputContainer, LoginContainer, LoginForm } from "./Login.styles";
 import { Button, Input, Text } from "@isabelajs/design-system";
 import { useForm, Controller } from "react-hook-form";
+import { TypeloginForm } from "../interfaces/login.type";
 
-type loginForm = {
-  email: string;
-  password: string;
-};
 
 function Login() {
   const login = useAuthStore((state) => state.login);
@@ -25,7 +22,7 @@ function Login() {
   });
 
 
-  const onSubmit = async (data: loginForm) => {
+  const onSubmit = async (data: TypeloginForm) => {
     console.log(data);
     try {
       await login(data.email, data.password);
