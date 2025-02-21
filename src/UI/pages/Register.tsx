@@ -15,7 +15,7 @@ function Register() {
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<TypeRegisterForm>({
     defaultValues: {
       name: "",
       email: "",

@@ -13,7 +13,7 @@ function Login() {
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<TypeloginForm>({
     defaultValues: {
       email: "",
       password: "",
