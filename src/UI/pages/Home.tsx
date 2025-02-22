@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import { useAuthStore } from "../stores/authStore";
 import {
   CardsContainer,
@@ -14,7 +14,7 @@ import { useUrlsStore } from "../stores/urlsStore";
 
 function Home() {
   const [error, setError] = useState("");
-  const [sucess, setSucess] = useState(false);
+  const [sucess, setSucess] = useState("");
   const { logout, user } = useAuthStore((state) => state);
   const { addUrl, getUrls, removeUrl, urls } = useUrlsStore((state) => state);
 
@@ -36,11 +36,11 @@ function Home() {
     try {
       await addUrl(user?.email, data);
       setError("");
-      setSucess(true);
+      setSucess("URL guardada correctamente");
       reset();
     } catch (error: any) {
       setError(error.message);
-      setSucess(false);
+      setSucess("");
     }
   };
 
@@ -48,7 +48,7 @@ function Home() {
     if (error || sucess) {
       setTimeout(() => {
         setError("");
-        setSucess(false);
+        setSucess("");
       }, 1500);
     }
   }, [error, sucess]);
@@ -143,7 +143,7 @@ function Home() {
           {sucess && (
             <Text
               color="success"
-              text="URL guardada correctamente"
+              text={sucess}
               type="body1"
             />
           )}
@@ -163,7 +163,15 @@ function Home() {
             }}
             onAction={() => {
               if (!user?.email) return;
-              removeUrl(user?.email, url.name);
+              try {
+                removeUrl(user?.email, url.name);
+                setError("");
+                setSucess("URL eliminada correctamente");
+              } catch (error: any) {
+                setError(error.message);
+                setSucess("");
+              }
+
             }}
           />
         ))}
