@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm, Controller } from "react-hook-form";
 import { useAuthStore } from "../stores/authStore";
 import { Button, Input, Text } from "@isabelajs/design-system";
@@ -8,7 +8,7 @@ import { TypeRegisterForm } from "../interfaces/register.type";
 
 function Register() {
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
   const register = useAuthStore((state) => state.register);
 
   const {
@@ -39,7 +39,7 @@ function Register() {
         text="Iniciar sesión"
         variant="outline"
         customStyles={{ alignSelf: "flex-end" }}
-        onClick={() => (window.location.href = "/login")}
+        onClick={() => navigate("/login")}
       />
       <div className="register-container">
         <Text color="primary" fontWeight="bold" text="Registrarse" type="h1" />

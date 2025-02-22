@@ -4,11 +4,12 @@ import { InputContainer, LoginContainer, LoginForm } from "./Login.styles";
 import { Button, Input, Text } from "@isabelajs/design-system";
 import { useForm, Controller } from "react-hook-form";
 import { TypeloginForm } from "../interfaces/login.type";
-
+import { useNavigate } from "react-router";
 
 function Login() {
   const login = useAuthStore((state) => state.login);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -37,7 +38,7 @@ function Login() {
         text="Crear cuenta"
         variant="outline"
         customStyles={{ alignSelf: "flex-end" }}
-        onClick={() => (window.location.href = "/register")}
+        onClick={() => navigate("/register")}
       />
       <LoginForm>
         <Text
