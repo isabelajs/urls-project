@@ -60,9 +60,9 @@ export class UserAdapter implements UserRepository {
 
   async getUrlsByEmail(email: string): Promise<IUrls[]> {
     const storeUrls = await this.cacheRepository.get<IStoreUrls[]>(EnumCacheData.URLS);
-    if(!storeUrls) throw new Error('Store urls not found');
+    if (!storeUrls) return [];
     const user = storeUrls.find((user: IStoreUrls) => user.email === email);
-    if(!user) throw new Error('User not found');
+    if (!user) return [];
     return user.urls;
   }
 
