@@ -10,7 +10,11 @@ export class AuthUseCase {
 
   async login(email: string, password: string): Promise<User | null> {
     const user = await this.userRepository.login(email, password)
-    this.cacheRepository.set(EnumCacheData.SESSION, user);
+    if(!user) return null;
+    this.cacheRepository.set(EnumCacheData.SESSION, {
+      name: user.name,
+      email: user.email,
+    });
     return user;
   }
 
@@ -19,7 +23,10 @@ export class AuthUseCase {
     await this.userRepository.register(user).catch((error) => {
       throw new Error(error.message);
     });
-    this.cacheRepository.set(EnumCacheData.SESSION, user);
+    this.cacheRepository.set(EnumCacheData.SESSION, {
+      name: user.name,
+      email: user.email,
+    });
   }
 
   async getSession(): Promise<User | null> {

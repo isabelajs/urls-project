@@ -9,10 +9,11 @@ import { IStoreUrls } from './interfaces/store-urls.interface';
 export class UserAdapter implements UserRepository {
   constructor(private readonly cacheRepository: ICacheRepository) {}
 
+
   async login(email: string, password: string): Promise<User | null> {
     const user = await this.getUserByEmail(email);
     if(!user) throw new Error('User not found');
-    if(user.password !== password) throw new Error('Invalid credentials');
+    if(!user.verifyPassword(password)) throw new Error('Invalid credentials');
     return user;
   }
 
@@ -27,16 +28,17 @@ export class UserAdapter implements UserRepository {
 
   async register(user: User): Promise<void> {
     const isUserExists = await this.getUserByEmail(user.email);
-
+    const newUser = {
+      name: user.name,
+      email: user.email,
+      password: user.encryptPassword(user.password),
+    }
     if(isUserExists) {
       throw new Error('User already exists');
     }
-
     const users = await this.cacheRepository.get<IStoredUser[]>(EnumCacheData.USERS) || [];
-    users.push(user);
-
+    users.push(newUser);
     await this.cacheRepository.set<IStoredUser[]>(EnumCacheData.USERS, users);
-
   }
 
   async saveUrlsByEmail(email: string, url: IUrls): Promise<void> {
