@@ -25,7 +25,6 @@ function Register() {
   });
 
   const onSubmit = async (data: TypeRegisterForm) => {
-    console.log(data);
     try {
       await register(data.name, data.email, data.password);
     } catch (error: any) {

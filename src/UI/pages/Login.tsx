@@ -24,7 +24,6 @@ function Login() {
 
 
   const onSubmit = async (data: TypeloginForm) => {
-    console.log(data);
     try {
       await login(data.email, data.password);
     } catch (error: any) {
