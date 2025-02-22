@@ -25,9 +25,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const user = await authService.login(email, password)
       set({ isAuthenticated: true, user })
-    } catch (error) {
-      console.error('Login failed:', error)
-      throw new Error('Login failed')
+    } catch (error:any) {
+      throw new Error(error.message)
     }
   },
   logout: async () => {

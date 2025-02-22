@@ -12,8 +12,8 @@ export class UserAdapter implements UserRepository {
 
   async login(email: string, password: string): Promise<User | null> {
     const user = await this.getUserByEmail(email);
-    if(!user) throw new Error('User not found');
-    if(!user.verifyPassword(password)) throw new Error('Invalid credentials');
+    if(!user) throw new Error('Usuario no encontrado');
+    if(!user.verifyPassword(password)) throw new Error('Credenciales inválidas');
     return user;
   }
 
