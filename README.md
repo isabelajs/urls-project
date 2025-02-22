@@ -1,50 +1,56 @@
-# React + TypeScript + Vite
+# Links - URL Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Una aplicación web que te permite gestionar y organizar tus enlaces favoritos.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Gestión de Usuarios
 
-## Expanding the ESLint configuration
+- **Registro de Usuario**
+  - Los usuarios pueden crear una nueva cuenta proporcionando:
+    - Nombre
+    - Correo electrónico
+    - Contraseña
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Inicio de Sesión**
+  - Acceso seguro mediante:
+    - Correo electrónico
+    - Contraseña
 
-- Configure the top-level `parserOptions` property like this:
+### Gestión de URLs
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Listado de Enlaces**
+  - Visualización de todos los enlaces guardados
+  - Muestra nombre descriptivo y URL para cada enlace
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- **Agregar URLs**
+  - Capacidad para guardar nuevos enlaces especificando:
+    - URL (debe ser una URL válida)
+    - Nombre descriptivo (mínimo 3 caracteres)
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- **Eliminar URLs**
+  - Opción para eliminar enlaces guardados
+  - Eliminación individual por enlace
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Tecnologías Utilizadas
+
+- React
+- TypeScript
+- React Hook Form
+- Zustand para manejo de estado
+- Design System personalizado (@isabelajs/design-system)
+
+## Características Adicionales
+
+- Validación de formularios en tiempo real
+- Mensajes de feedback para acciones exitosas y errores
+- Interfaz responsiva y amigable
+- Diseño moderno y minimalista
+
+## Seguridad
+
+- Autenticación de usuarios
+- Protección de rutas
+- Validación de datos de entrada
+- Gestión segura de sesiones
+
