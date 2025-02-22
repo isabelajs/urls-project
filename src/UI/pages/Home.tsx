@@ -86,7 +86,7 @@ function Home() {
                 rules={{
                   required: "URL es requerida",
                   pattern: {
-                    value: /^https?:\/\/[^\s]+$/,
+                    value: /^(https?:\/\/|www\.)[^\s]+$/,
                     message: "URL inválida",
                   },
                 }}
